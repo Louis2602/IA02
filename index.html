@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>VueJS 3</title>
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+		/>
+	</head>
+	<style>
+		:root {
+			--pink-color: #f2dada;
+			--blue-color: #d3e1fc;
+			--pink-color-dark: #281010;
+			--blue-color-dark: #0a1531;
+			--dark-mode-color: #22252a;
+			--text-dark-pink-color: #462327;
+			--text-yellow-color: #ebc45f;
+		}
+		* {
+			box-sizing: border-box;
+			padding: 0;
+			margin: 0;
+		}
+		body {
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
+		}
+		a {
+			text-decoration: none;
+			list-style: none;
+			color: #000;
+		}
+
+		.carousel-inner {
+			padding: 0 40px;
+		}
+
+		#three-carousel-inner .carousel-item {
+			display: flex;
+			margin-right: 0;
+			flex: 0 0 calc(100% / 3 - 5px);
+			overflow: auto;
+			border: 1px solid #000;
+			border-radius: 7px;
+		}
+		.carousel-control-next,
+		.carousel-control-prev {
+			width: fit-content;
+		}
+	</style>
+
+	<body>
+		<div id="app"></div>
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"
+		></script>
+		<script type="importmap">
+			{
+				"imports": {
+					"vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+				}
+			}
+		</script>
+		<script type="module">
+			import app from './app.js';
+			import { createApp } from 'vue';
+			createApp(app).mount('#app');
+		</script>
+	</body>
+</html>
