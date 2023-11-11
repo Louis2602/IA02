@@ -95,6 +95,20 @@ async function get(className, params) {
 			moviesData = movies.Names;
 			break;
 	}
+	const obj = {
+		get: className,
+		page: parseInt(params.page) || 1,
+		per_page: parseInt(params.per_page) || 3,
+		total_page: Math.ceil(
+			moviesData.length / (parseInt(params.per_page) || 3)
+		),
+		total: moviesData.length,
+		items: moviesData.slice(
+			(parseInt(params.page) - 1) * parseInt(params.per_page) || 0,
+			parseInt(params.page) * parseInt(params.per_page) ||
+				moviesData.length
+		),
+	};
 
 	return {
 		get: className,

@@ -1,5 +1,5 @@
 export default {
-	props: ['movies'],
+	props: ['movies', 'darkMode'],
 	template: `
     <div id="movie-carousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">

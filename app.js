@@ -3,14 +3,14 @@ import Nav from './components/nav.js';
 import Footer from './components/footer.js';
 import Content from './components/content.js';
 import { movieDb } from './db/movieDB.js';
-import { computed } from 'vue';
 
 export default {
 	data() {
 		return {
 			topBoxOfficeData: {},
 			mostPopularData: {},
-			topRaingData: {},
+			topRatingData: {},
+			darkMode: false,
 		};
 	},
 	components: {
@@ -18,13 +18,6 @@ export default {
 		Nav,
 		Footer,
 		Content,
-	},
-	prodiver() {
-		return {
-			topBoxOfficeData: computed(() => this.topBoxOfficeData),
-			mostPopularData: computed(() => this.mostPopularData),
-			topRatingData: computed(() => this.topRatingData),
-		};
 	},
 	methods: {
 		async fetchData() {
@@ -35,14 +28,41 @@ export default {
 				this.mostPopularData = await movieDb.fetch(
 					'get/mostpopular/?per_page=3&page=1'
 				);
-				console.log(this.mostPopularData);
 
-				this.topRaingData = await movieDb.fetch(
+				this.topRatingData = await movieDb.fetch(
 					'get/top50/?per_page=3&page=1'
 				);
 			} catch (error) {
 				console.error('Error fetching data:', error);
 			}
+		},
+		handleDarkTheme(isDarkTheme) {
+			this.darkMode = isDarkTheme;
+			if (isDarkTheme) {
+				$('#app').css({
+					'background-color': 'var(--dark-background-color)',
+					color: 'white',
+				});
+				$(
+					'.carousel-control-prev-icon, .carousel-control-next-icon'
+				).css({
+					filter: 'invert(0%)',
+				});
+			} else {
+				$('#app').css({
+					'background-color': 'var(--light-background-color)',
+					color: 'black',
+				});
+				$(
+					'.carousel-control-prev-icon, .carousel-control-next-icon'
+				).css({
+					filter: 'invert(100%)',
+				});
+			}
+		},
+		handleSearch(form) {
+			const searchInput = form.searchInput;
+			console.log(searchInput);
 		},
 	},
 	async mounted() {
@@ -50,10 +70,10 @@ export default {
 	},
 	template: `
 	<div class="container p-2" style="width: 1200px;">
-		<Header/>
-		<Nav/>
-		<Content :topBoxOfficeData="topBoxOfficeData" :mostPopularData="mostPopularData" :topRatingData="topRatingData"/>
-        <Footer/>
+		<Header @dark-mode="handleDarkTheme"/>
+		<Nav :darkMode="darkMode" @submit="handleSearch"/>
+		<Content :topBoxOfficeData="topBoxOfficeData" :mostPopularData="mostPopularData" :topRatingData="topRatingData" :darkMode="darkMode"/>
+        <Footer :darkMode="darkMode"/>
     </div>
     `,
 };
