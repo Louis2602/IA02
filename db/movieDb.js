@@ -61,9 +61,11 @@ async function search(className, pattern, params) {
 
 async function detail(className, id) {
 	let data;
+	let reviews;
 	switch (className) {
 		case 'movie':
 			data = movies.Movies.find((movie) => movie.id === id);
+			reviews = movies.Reviews.find((review) => review.movieId === id);
 			break;
 		case 'name':
 			data = movies.Names.find((actor) => actor.id === id);
@@ -72,11 +74,11 @@ async function detail(className, id) {
 	return {
 		detail: id,
 		item: data || [],
+		reviews: reviews || [],
 	};
 }
 
 async function get(className, params) {
-	console.log(movies.Reviews);
 	let moviesData;
 	switch (className) {
 		case 'topboxoffice':

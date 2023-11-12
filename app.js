@@ -90,7 +90,7 @@ export default {
 	mounted() {
 		setTimeout(() => {
 			this.loading = false;
-		}, 1000);
+		}, 2000);
 	},
 	watch: {
 		page(newPage) {
@@ -98,7 +98,7 @@ export default {
 				this.loading = true;
 				setTimeout(() => {
 					this.loading = false;
-				}, 1000);
+				}, 2000);
 			}
 		},
 	},
@@ -107,11 +107,13 @@ export default {
 		<Loading v-if="page==='home' && loading"/>
 		<Header @dark-mode="handleDarkTheme"/>
 		<Nav :darkMode="darkMode" @search="handleSearch"/>
-		<Content v-if="page==='home'" @selected-movie="handleSelectedMovie"/>
-		<Search v-else-if="page==='search'" :movies="searchData" :currentPageSearch="currentPageSearch" @page-change="changePage"/>
-		<MovieDetail v-else-if="page==='movie-detail'" :movie="selectedMovie"/>
-		<ActorDetail v-else-if="page==='actor-detail'" :actor="selectedActor"/>
-        <Footer :darkMode="darkMode"/>
+		<div style="min-height: 100vh;">
+			<Content v-if="page==='home'" @selected-movie="handleSelectedMovie"/>
+			<Search v-else-if="page==='search'" :movies="searchData" :currentPageSearch="currentPageSearch" @page-change="changePage"/>
+			<MovieDetail v-else-if="page==='movie-detail'" :movie="selectedMovie"/>
+			<ActorDetail v-else-if="page==='actor-detail'" :actor="selectedActor"/>
+		</div>
+		<Footer :darkMode="darkMode"/>
     </div>
     `,
 };

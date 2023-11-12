@@ -1,15 +1,20 @@
 import { movieDb } from '../db/movieDb.js';
+import Pagination from './pagination.js';
 
 export default {
 	props: ['movie'],
 	data() {
 		return {
 			movieInfo: null,
+			reviews: [],
+			itemsPerPage: 5, // Set the number of reviews per page
+			currentReviewPage: 1,
+			paginatedReviews: [],
 		};
 	},
+	components: { Pagination },
 	async created() {
-		const response = await movieDb.fetch(`detail/movie/${this.movie.id}/`);
-		this.movieInfo = await response.item;
+		await this.fetchMovieInfo();
 	},
 	template: ` 
     <div class="container my-5">
@@ -51,8 +56,35 @@ export default {
             <h2 class="mb-4">Similar Movies:</h2>
             <div v-for="(similar, index) in movieInfo?.similars" :key="index" class="col-md-4 my-3 text-center" @click="handleSelectSimilar(similar)" style="cursor: pointer;">
                 <img v-if="similar?.image" :src="similar?.image" alt="Similar Image" width="300" height="300" class="rounded">
-                <p>{{movie?.title}}</p>
+                <p>{{similar?.title}}</p>
             </div>
+        </div>
+        <div class="row" v-if="reviews.length !== 0">
+            <h2 class="mb-4">Reviews:</h2>
+            <div class="card my-2" v-for="(review, index) in paginatedReviews" :key="index">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
+                        <p class="text-secondary text-center">{{review?.date}}</p>
+                    </div>
+                    <div class="col-md-10">
+                        <h4>{{review?.title}}</h4>
+                        <div class="d-flex flex-row">
+                            <p class="float-left" style="margin-right: 5px;" :style="{color: review?.warningSpoilers ? 'green' : 'red'}"><strong>{{review?.username}}</strong></p>
+                            <div class="d-flex flex-row">
+                                <span class="float-right" v-for="starIndex in Math.floor(review?.rate / 2)"><i class="text-warning fa fa-star"></i></span>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <p>{{review?.content}}</p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <Pagination :pages="Math.ceil(reviews?.length / itemsPerPage)" @page-change="loadReviewPage" :currentPage="currentReviewPage"/>
         </div>
     </div>
     `,
@@ -60,10 +92,7 @@ export default {
 		movie: {
 			immediate: true,
 			async handler(newMovie) {
-				const response = await movieDb.fetch(
-					`detail/movie/${newMovie.id}/`
-				);
-				this.movieInfo = await response.item;
+				await this.fetchMovieInfo(newMovie);
 			},
 		},
 	},
@@ -73,6 +102,23 @@ export default {
 		},
 		handleSelectActor(actor) {
 			this.$parent.handleSelectedActor(actor);
+		},
+		async fetchMovieInfo(movie = null) {
+			const response = await movieDb.fetch(
+				`detail/movie/${movie ? movie.id : this.movie.id}/`
+			);
+			this.movieInfo = response.item;
+			this.reviews = response?.reviews?.items || [];
+			this.updatePaginatedReviews();
+		},
+		updatePaginatedReviews() {
+			const startIndex = (this.currentReviewPage - 1) * this.itemsPerPage;
+			const endIndex = startIndex + this.itemsPerPage;
+			this.paginatedReviews = this.reviews?.slice(startIndex, endIndex);
+		},
+		loadReviewPage(page) {
+			this.currentReviewPage = page;
+			this.updatePaginatedReviews();
 		},
 	},
 };

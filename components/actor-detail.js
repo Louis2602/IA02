@@ -16,18 +16,7 @@ export default {
 		Pagination,
 	},
 	async created() {
-		const response = await movieDb.fetch(`detail/name/${this.actor.id}/`);
-		this.actorInfo = await response.item;
-		if (response.item.length !== 0) {
-			response.item?.castMovies.map(async (movie) => {
-				const foundMovie = await movieDb.fetch(
-					`detail/movie/${movie.id}/`
-				);
-				if (foundMovie.item.length !== 0) {
-					this.castMovies.push(foundMovie.item);
-				}
-			});
-		}
+		await this.fetchActorInfo();
 	},
 	template: ` 
     <div class="container my-5">
@@ -57,32 +46,31 @@ export default {
         </div>
         <div class="row" v-if="castMovies.length !== 0">
             <h2 class="mb-4">Cast Movies:</h2>
-            <div v-for="(movie, index) in castMovies" :key="index" class="col-md-4 my-3" @click="handleSelectCastMovie(movie)" style="cursor: pointer;">
+            <div v-for="(movie, index) in paginatedMovies" :key="index" class="col-md-4 my-3" @click="handleSelectCastMovie(movie)" style="cursor: pointer;">
                 <img v-if="movie?.image" :src="movie?.image" alt="Movie Poster" width="300" height="300" class="rounded">
                 <p>{{movie?.title}}</p>
             </div>
         </div>
         <!-- Pagination -->
 		<div class="col-md-12">
-			<Pagination :pages="Math.ceil(castMovies.length / 3)" @page-change="loadPage" :currentPage="currentPage"/>
+			<Pagination :pages="Math.ceil(castMovies.length / itemsPerPage)" @page-change="loadPage" :currentPage="currentPage"/>
 		</div>
     </div>
     `,
 	watch: {
 		actor: {
-			immediate: true,
-			async handler(newMovie) {
-				await this.fetchActorInfo();
+			async handler(newActor) {
+				await this.fetchActorInfo(newActor);
 			},
 		},
 	},
 	methods: {
-		async fetchActorInfo() {
-			const response = await movieDb.fetch(
-				`detail/actor/${this.actor.id}/`
-			);
+		async fetchActorInfo(actor = null) {
+			const actorId = actor ? actor.id : this.actor.id;
+			const response = await movieDb.fetch(`detail/name/${actorId}/`);
 			this.actorInfo = response.item;
 			if (response.item.length !== 0) {
+				this.castMovies = [];
 				await Promise.all(
 					response.item?.castMovies.map(async (movie) => {
 						const foundMovie = await movieDb.fetch(
@@ -104,7 +92,6 @@ export default {
 		loadPage(page) {
 			this.currentPage = page;
 			this.updatePaginatedMovies();
-			this.$emit('page-change', page);
 		},
 		handleSelectCastMovie(similar) {
 			this.$parent.handleSelectedMovie(similar);

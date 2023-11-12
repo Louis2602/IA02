@@ -7,7 +7,7 @@ export default {
     <div class="container my-4">
         <div class="row">
             <div v-for="(movie, index) in movies.items" :key="index" class="col-md-4 my-3"> 
-                <div class="card h-100" style="width: 350px;">
+                <div class="card h-100" style="width: 350px; cursor: pointer;" @click="handleSelectMovie(movie)">
                     <img :src="movie.image" class="card-img-top" alt="Movie Poster">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
                         <h5 class="card-title">{{ movie.fullTitle }}</h5>
@@ -31,5 +31,8 @@ export default {
 		loadPage(page) {
 			this.$emit('page-change', page);
 		},
+		handleSelectMovie(movie) {
+            this.$parent.handleSelectedMovie(movie)
+        }
 	},
 };
