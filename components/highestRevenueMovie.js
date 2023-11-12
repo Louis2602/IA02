@@ -14,7 +14,12 @@ export default {
 	components: { Carousel },
 	template: `
         <div class="column">
-            <Carousel :movies="movies"/>
+            <Carousel :movies="movies" @selected-movie="handleSelectedMovie"/>
         </div>    
     `,
+	methods: {
+		handleSelectedMovie(movie) {
+			this.$emit('selected-movie', movie);
+		},
+	},
 };

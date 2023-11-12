@@ -6,7 +6,7 @@ export default {
             <button v-for="(movie, index) in movies.items" :key="index" type="button" data-bs-target="#movie-carousel" :data-bs-slide-to="index" :class="{ 'active': index === 0 }" aria-current="true" :aria-label="'Slide ' + (index + 1)"></button>
         </div>
         <div class="carousel-inner">
-            <div v-for="(movie, index) in movies.items" :key="index" class="carousel-item" :class="{ 'active': index === 0 }">
+            <div v-for="(movie, index) in movies.items" :key="index" class="carousel-item" :class="{ 'active': index === 0 }" @click="showMovieDetail(movie)" style="cursor: pointer">
                 <img v-if="movie.movie.image" :src="movie.movie.image" class="d-block mx-auto rounded my-2" alt="Movie Poster" style="max-width: 400px; max-height: 800px; object-fit: contain;">
                 <div class="carousel-caption d-none d-md-block text-wrap"           style="max-width: 400px; margin: auto;">
                     <h5 style="color: var(--text-yellow-color)">{{ movie.movie.fullTitle }}</h5>
@@ -24,4 +24,9 @@ export default {
         </button>
     </div>
     `,
+	methods: {
+		showMovieDetail(movie) {
+			this.$emit('selected-movie', movie.movie);
+		},
+	},
 };

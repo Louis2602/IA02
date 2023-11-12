@@ -3,6 +3,8 @@ import Nav from './components/nav.js';
 import Footer from './components/footer.js';
 import Content from './components/content.js';
 import Search from './components/search.js';
+import MovieDetail from './components/movie-detail.js';
+import ActorDetail from './components/actor-detail.js';
 import { movieDb } from './db/movieDb.js';
 
 export default {
@@ -14,6 +16,8 @@ export default {
 			page: 'home',
 			currentPageSearch: 1,
 			searchInput: '',
+			selectedMovie: null,
+			selectedActor: null,
 		};
 	},
 	components: {
@@ -22,6 +26,8 @@ export default {
 		Footer,
 		Content,
 		Search,
+		MovieDetail,
+		ActorDetail,
 	},
 	methods: {
 		handleDarkTheme(isDarkTheme) {
@@ -64,19 +70,28 @@ export default {
 				);
 				this.searchData = response;
 			}
-			console.log(this.searchData);
 		},
 		async changePage(page) {
 			this.currentPageSearch = page;
 			await this.handleSearch(this.searchInput, this.page);
+		},
+		handleSelectedMovie(movie) {
+			this.selectedMovie = movie;
+			this.page = 'movie-detail';
+		},
+		handleSelectedActor(actor) {
+			this.selectedActor = actor;
+			this.page = 'actor-detail';
 		},
 	},
 	template: `
 	<div class="container p-2" style="width: 1200px;">
 		<Header @dark-mode="handleDarkTheme"/>
 		<Nav :darkMode="darkMode" @search="handleSearch"/>
-		<Content v-if="page==='home'"/>
+		<Content v-if="page==='home'" @selected-movie="handleSelectedMovie"/>
 		<Search v-else-if="page==='search'" :movies="searchData" :currentPageSearch="currentPageSearch" @page-change="changePage"/>
+		<MovieDetail v-else-if="page==='movie-detail'" :movie="selectedMovie"/>
+		<ActorDetail v-else-if="page==='actor-detail'" :actor="selectedActor"/>
         <Footer :darkMode="darkMode"/>
     </div>
     `,

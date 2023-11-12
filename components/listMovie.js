@@ -7,7 +7,6 @@ export default {
 		return {
 			movies: [],
 			currentSlideIndex: 0,
-			selectedMovie: null,
 		};
 	},
 	async created() {
@@ -20,8 +19,8 @@ export default {
             <h3>{{ title }}</h3>
             <div :id="type" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner" id="three-carousel-inner">
-					<div class="carousel-item active d-flex flex-row" style="cursor: pointer" @click="showMovieDetail(movie)">
-						<div class="mx-auto" v-for="(movie, index) in movies.items" :key="index">
+					<div class="carousel-item active d-flex flex-row" style="cursor: pointer">
+						<div class="mx-auto" v-for="(movie, index) in movies.items" :key="index" @click="showMovieDetail(movie)">
 							<img v-if="movie.image" :src="movie.image" class="d-block rounded" alt="Movie Poster" style="width: 400px; height: 200px;">
 						</div>
 					</div>
@@ -35,7 +34,6 @@ export default {
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
-				<MovieDetail :movie="selectedMovie" />
         </div> 
     `,
 	methods: {
@@ -66,7 +64,7 @@ export default {
 			this.currentSlideIndex = slideIndex; // Update the current slide index
 		},
 		showMovieDetail(movie) {
-			this.selectedMovie = movie;
+			this.$emit('selected-movie', movie);
 		},
 	},
 };

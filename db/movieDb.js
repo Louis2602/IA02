@@ -60,11 +60,18 @@ async function search(className, pattern, params) {
 }
 
 async function detail(className, id) {
-	const movie = movies.find((movie) => movie.id === id);
-
+	let data;
+	switch (className) {
+		case 'movie':
+			data = movies.Movies.find((movie) => movie.id === id);
+			break;
+		case 'name':
+			data = movies.Names.find((actor) => actor.id === id);
+			break;
+	}
 	return {
 		detail: id,
-		item: movie,
+		item: data || [],
 	};
 }
 
