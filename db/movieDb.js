@@ -35,16 +35,13 @@ async function search(className, pattern, params) {
 			break;
 
 		case 'name':
-			filteredMovies = movies.Names.filter((movie) =>
-				movie.actorList.filter((actor) =>
+			filteredMovies = movies.Movies.filter((movie) =>
+				movie.actorList.some((actor) =>
 					actor.name.toLowerCase().includes(pattern.toLowerCase())
 				)
 			);
-
 			break;
 	}
-
-	console.log(filteredMovies);
 
 	return {
 		search: pattern,

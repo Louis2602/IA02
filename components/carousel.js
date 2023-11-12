@@ -10,7 +10,7 @@ export default {
                 <img v-if="movie.movie.image" :src="movie.movie.image" class="d-block mx-auto rounded my-2" alt="Movie Poster" style="max-width: 400px; max-height: 800px; object-fit: contain;">
                 <div class="carousel-caption d-none d-md-block text-wrap"           style="max-width: 400px; margin: auto;">
                     <h5 style="color: var(--text-yellow-color)">{{ movie.movie.fullTitle }}</h5>
-                    <p style="color: var(--text-yellow-color)">[ {{ movie.movie.genreList.map(genre => genre.key).join(', ') }} ]</p>
+                    <p style="color: var(--text-yellow-color)">[{{ movie.movie.genreList.map(genre => genre.key).join(', ') }}]</p>
                 </div>
             </div>
         </div>

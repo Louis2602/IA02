@@ -64,6 +64,7 @@ export default {
 				);
 				this.searchData = response;
 			}
+			console.log(this.searchData);
 		},
 		async changePage(page) {
 			this.currentPageSearch = page;

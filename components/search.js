@@ -11,7 +11,12 @@ export default {
                     <img :src="movie.image" class="card-img-top" alt="Movie Poster">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
                         <h5 class="card-title">{{ movie.fullTitle }}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <p class="card-text">{{ movie.plot }}</p>
+                        <p class="card-text text-secondary fst-italic">[{{ movie.genreList.map(genre => genre.key).join(', ') }}]</p>
+                        <div class="d-flex flex-row justify-content-between w-100">
+                            <p class="card-text text-warning">Rating: {{ movie.ratings.filmAffinity }}</p>
+                            <p class="card-text text-info">Length: {{ movie.runtimeStr }}</p>
+                        </div>
                     </div>
                 </div> 
             </div>
