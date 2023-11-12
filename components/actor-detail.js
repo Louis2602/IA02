@@ -7,6 +7,9 @@ export default {
 		return {
 			actorInfo: null,
 			castMovies: [],
+			itemsPerPage: 3, // Set the number of items per page
+			currentPage: 1,
+			paginatedMovies: [],
 		};
 	},
 	components: {
@@ -61,7 +64,7 @@ export default {
         </div>
         <!-- Pagination -->
 		<div class="col-md-12">
-			<Pagination :pages="castMovies.length" @page-change="loadPage" :currentPage="currentPageSearch"/>
+			<Pagination :pages="Math.ceil(castMovies.length / 3)" @page-change="loadPage" :currentPage="currentPage"/>
 		</div>
     </div>
     `,
@@ -69,14 +72,40 @@ export default {
 		actor: {
 			immediate: true,
 			async handler(newMovie) {
-				const response = await movieDb.fetch(
-					`detail/actor/${newMovie.id}/`
-				);
-				this.actorInfo = await response.item;
+				await this.fetchActorInfo();
 			},
 		},
 	},
 	methods: {
+		async fetchActorInfo() {
+			const response = await movieDb.fetch(
+				`detail/actor/${this.actor.id}/`
+			);
+			this.actorInfo = response.item;
+			if (response.item.length !== 0) {
+				await Promise.all(
+					response.item?.castMovies.map(async (movie) => {
+						const foundMovie = await movieDb.fetch(
+							`detail/movie/${movie.id}/`
+						);
+						if (foundMovie.item.length !== 0) {
+							this.castMovies.push(foundMovie.item);
+						}
+					})
+				);
+				this.updatePaginatedMovies();
+			}
+		},
+		updatePaginatedMovies() {
+			const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+			const endIndex = startIndex + this.itemsPerPage;
+			this.paginatedMovies = this.castMovies.slice(startIndex, endIndex);
+		},
+		loadPage(page) {
+			this.currentPage = page;
+			this.updatePaginatedMovies();
+			this.$emit('page-change', page);
+		},
 		handleSelectCastMovie(similar) {
 			this.$parent.handleSelectedMovie(similar);
 		},

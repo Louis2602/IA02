@@ -76,6 +76,7 @@ async function detail(className, id) {
 }
 
 async function get(className, params) {
+	console.log(movies.Reviews);
 	let moviesData;
 	switch (className) {
 		case 'topboxoffice':

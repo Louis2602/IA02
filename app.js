@@ -5,6 +5,7 @@ import Content from './components/content.js';
 import Search from './components/search.js';
 import MovieDetail from './components/movie-detail.js';
 import ActorDetail from './components/actor-detail.js';
+import Loading from './components/loading.js';
 import { movieDb } from './db/movieDb.js';
 
 export default {
@@ -18,6 +19,7 @@ export default {
 			searchInput: '',
 			selectedMovie: null,
 			selectedActor: null,
+			loading: true,
 		};
 	},
 	components: {
@@ -28,6 +30,7 @@ export default {
 		Search,
 		MovieDetail,
 		ActorDetail,
+		Loading,
 	},
 	methods: {
 		handleDarkTheme(isDarkTheme) {
@@ -84,8 +87,24 @@ export default {
 			this.page = 'actor-detail';
 		},
 	},
+	mounted() {
+		setTimeout(() => {
+			this.loading = false;
+		}, 1000);
+	},
+	watch: {
+		page(newPage) {
+			if (newPage === 'home') {
+				this.loading = true;
+				setTimeout(() => {
+					this.loading = false;
+				}, 1000);
+			}
+		},
+	},
 	template: `
 	<div class="container p-2" style="width: 1200px;">
+		<Loading v-if="page==='home' && loading"/>
 		<Header @dark-mode="handleDarkTheme"/>
 		<Nav :darkMode="darkMode" @search="handleSearch"/>
 		<Content v-if="page==='home'" @selected-movie="handleSelectedMovie"/>
