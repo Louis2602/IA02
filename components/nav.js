@@ -12,7 +12,7 @@ export default {
 				<i class="fa-solid fa-house" :class="{ 'text-light': darkMode, 'text-dark': !darkMode }"></i>
 			</a>
 			<form class="d-flex" @submit.prevent="search">
-				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" :style="{backgroundColor: darkMode ? 'var(--dark-background-color)' : '#fff', border: darkMode ? '1px solid #aaa' : '1px solid #ccc' }" v-model="searchInput" id="searchInput" v-on:keydown.enter.prevent>
+				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" :style="{backgroundColor: darkMode ? 'var(--dark-background-color)' : '#fff', border: darkMode ? '1px solid #aaa' : '1px solid #ccc', color: darkMode ? '#fff' : '#000' }" v-model="searchInput" id="searchInput" v-on:keydown.enter.prevent>
 				<button class="btn btn-outline-success" type="submit">Search</button>
 			</form>
 			</div>

@@ -20,7 +20,7 @@ export default {
             <div :id="type" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner" id="three-carousel-inner">
 					<div class="carousel-item active d-flex flex-row" style="cursor: pointer">
-						<div class="mx-auto" v-for="(movie, index) in movies.items" :key="index" @click="showMovieDetail(movie)">
+						<div class="mx-auto carousel-item-wrapper" v-for="(movie, index) in movies.items" :key="index" @click="showMovieDetail(movie)">
 							<img v-if="movie.image" :src="movie.image" class="d-block rounded" alt="Movie Poster" style="width: 400px; height: 200px;">
 						</div>
 					</div>

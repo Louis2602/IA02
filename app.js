@@ -45,6 +45,9 @@ export default {
 				).css({
 					filter: 'invert(0%)',
 				});
+				$('#pagi-number').css({
+					'background-color': 'var(--dark-background-color)',
+				});
 			} else {
 				$('#app').css({
 					'background-color': 'var(--light-background-color)',
@@ -54,6 +57,9 @@ export default {
 					'.carousel-control-prev-icon, .carousel-control-next-icon'
 				).css({
 					filter: 'invert(100%)',
+				});
+				$('#pagi-number').css({
+					'background-color': 'var(--light-background-color)',
 				});
 			}
 		},
@@ -109,8 +115,8 @@ export default {
 		<Nav :darkMode="darkMode" @search="handleSearch"/>
 		<div style="min-height: 100vh;">
 			<Content v-if="page==='home'" @selected-movie="handleSelectedMovie"/>
-			<Search v-else-if="page==='search'" :movies="searchData" :currentPageSearch="currentPageSearch" @page-change="changePage"/>
-			<MovieDetail v-else-if="page==='movie-detail'" :movie="selectedMovie"/>
+			<Search v-else-if="page==='search'" :movies="searchData" :currentPageSearch="currentPageSearch" @page-change="changePage" :darkMode="darkMode"/>
+			<MovieDetail v-else-if="page==='movie-detail'" :movie="selectedMovie" :darkMode="darkMode"/>
 			<ActorDetail v-else-if="page==='actor-detail'" :actor="selectedActor"/>
 		</div>
 		<Footer :darkMode="darkMode"/>

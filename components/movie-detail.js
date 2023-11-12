@@ -2,7 +2,7 @@ import { movieDb } from '../db/movieDb.js';
 import Pagination from './pagination.js';
 
 export default {
-	props: ['movie'],
+	props: ['movie', 'darkMode'],
 	data() {
 		return {
 			movieInfo: null,
@@ -16,6 +16,12 @@ export default {
 	async created() {
 		await this.fetchMovieInfo();
 	},
+	computed: {
+		starCount() {
+			const imdbRating = parseInt(this.movieInfo?.ratings?.imDb) || 0;
+			return Math.floor(imdbRating / 2);
+		},
+	},
 	template: ` 
     <div class="container my-5">
         <div :style="{ backgroundImage: 'url(' + movieInfo?.image + ')' }" style="padding: 30px" class="my-4">
@@ -27,15 +33,24 @@ export default {
                 <div class="col-md-8 my-2" style="background-color: #343a40; color: #ffffff; padding: 20px;opacity: 0.8;">
                     <!-- Movie Details -->
                     <h2 class="mb-4">{{movieInfo?.title}}</h2>
-                    <p><strong>Rating:</strong> {{movieInfo?.ratings?.imDb}}</p>
+                    <div class="d-flex flex-row">
+                        <p class="float-left" style="margin-right: 5px;">
+                            <strong>Rating:</strong>
+                        </p>
+                        <div class="d-flex flex-row">
+                            <span class="float-right mx-1" v-for="starIndex in starCount" :key="starIndex">
+                            <i class="text-warning fa fa-star"></i>
+                            </span>
+                        </div>
+                    </div>
                     <p v-if="movieInfo?.languages"><strong>Languages:</strong> {{movieInfo?.languages}}</p>
                     <p v-if="movieInfo?.releaseDate"><strong>Release Date:</strong> {{movieInfo?.releaseDate}}</p>
                     <p v-else><strong>Release Year:</strong> {{movieInfo?.year}}</p>
                     <p v-if="movieInfo?.runtimeStr"><strong>Length:</strong> {{movieInfo?.runtimeStr}}</p>
-                    <p><strong>Genre:</strong> {{movieInfo?.genreList.map(genre => genre.key).join(', ') }}</p>
+                    <p><strong>Genre:</strong> {{movieInfo?.genreList?.map(genre => genre.key).join(', ') }}</p>
                     <p><strong>Plot:</strong> {{movieInfo?.plot}}</p>
-                    <p><strong>Director:</strong> {{movieInfo?.directorList.map(dir => dir.name).join(', ') }}</p>
-                    <p v-if="movieInfo?.writerList"><strong>Writer:</strong> {{movieInfo?.writerList.map(wri => wri.name).join(', ') }}</p>
+                    <p><strong>Director:</strong> {{movieInfo?.directorList?.map(dir => dir.name).join(', ') }}</p>
+                    <p v-if="movieInfo?.writerList"><strong>Writer:</strong> {{movieInfo?.writerList?.map(wri => wri.name).join(', ') }}</p>
                     <p v-if="movieInfo?.companies"><strong>Companies:</strong> {{movieInfo?.companies }}</p>
                     <p v-if="movieInfo?.keywords"><strong>Keywords:</strong> {{movieInfo?.keywords}}</p>
                 </div>
@@ -59,30 +74,30 @@ export default {
                 <p>{{similar?.title}}</p>
             </div>
         </div>
-        <div class="row" v-if="reviews.length !== 0">
+        <div v-if="reviews.length !== 0">
             <h2 class="mb-4">Reviews:</h2>
             <div class="card my-2" v-for="(review, index) in paginatedReviews" :key="index">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-2">
-                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
-                        <p class="text-secondary text-center">{{review?.date}}</p>
-                    </div>
-                    <div class="col-md-10">
-                        <h4>{{review?.title}}</h4>
-                        <div class="d-flex flex-row">
-                            <p class="float-left" style="margin-right: 5px;" :style="{color: review?.warningSpoilers ? 'green' : 'red'}"><strong>{{review?.username}}</strong></p>
-                            <div class="d-flex flex-row">
-                                <span class="float-right" v-for="starIndex in Math.floor(review?.rate / 2)"><i class="text-warning fa fa-star"></i></span>
-                            </div>
+                <div class="card-body" :style="{ backgroundColor: darkMode ? '#333' : '#fff'}">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
+                            <p class="text-center" :style="{ color: darkMode ? '#fff' : '#000'}">{{review?.date}}</p>
                         </div>
-                        <div class="clearfix"></div>
-                        <p>{{review?.content}}</p>
-                    </div>
+                        <div class="col-md-10">
+                            <h4 :style="{ color: darkMode ? '#fff' : '#000'}">{{review?.title}}</h4>
+                            <div class="d-flex flex-row">
+                                <p class="float-left" style="margin-right: 5px;" :style="{color: review?.warningSpoilers ? 'green' : 'red'}"><strong>{{review?.username}}</strong></p>
+                                <div class="d-flex flex-row">
+                                    <span class="float-right" v-for="starIndex in Math.floor(review?.rate / 2)"><i class="text-warning fa fa-star"></i></span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <p :style="{ color: darkMode ? '#fff' : '#000'}">{{review?.content}}</p>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         <div class="col-md-12">
             <Pagination :pages="Math.ceil(reviews?.length / itemsPerPage)" @page-change="loadReviewPage" :currentPage="currentReviewPage"/>
         </div>
