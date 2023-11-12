@@ -25,11 +25,26 @@ export const movieDb = {
 };
 
 async function search(className, pattern, params) {
-	// Perform search logic using data.js
-	// Example: filter movies based on search pattern
-	const filteredMovies = movies.filter((movie) =>
-		movie.title.toLowerCase().includes(pattern.toLowerCase())
-	);
+	let filteredMovies;
+
+	switch (className) {
+		case 'movie':
+			filteredMovies = movies.Movies.filter((movie) =>
+				movie.title.toLowerCase().includes(pattern.toLowerCase())
+			);
+			break;
+
+		case 'name':
+			filteredMovies = movies.Names.filter((movie) =>
+				movie.actorList.filter((actor) =>
+					actor.name.toLowerCase().includes(pattern.toLowerCase())
+				)
+			);
+
+			break;
+	}
+
+	console.log(filteredMovies);
 
 	return {
 		search: pattern,
@@ -95,29 +110,12 @@ async function get(className, params) {
 			moviesData = movies.Names;
 			break;
 	}
-	const obj = {
-		get: className,
-		page: parseInt(params.page) || 1,
-		per_page: parseInt(params.per_page) || 3,
-		total_page: Math.ceil(
-			moviesData.length / (parseInt(params.per_page) || 3)
-		),
-		total: moviesData.length,
-		items: moviesData.slice(
-			(parseInt(params.page) - 1) * parseInt(params.per_page) || 0,
-			parseInt(params.page) * parseInt(params.per_page) ||
-				moviesData.length
-		),
-	};
-
 	return {
 		get: className,
 		page: parseInt(params.page) || 1,
 		per_page: parseInt(params.per_page) || 3,
-		total_page: Math.ceil(
-			moviesData.length / (parseInt(params.per_page) || 3)
-		),
-		total: moviesData.length,
+		total_page: Math.ceil(24 / (parseInt(params.per_page) || 3)),
+		total: 24,
 		items: moviesData.slice(
 			(parseInt(params.page) - 1) * parseInt(params.per_page) || 0,
 			parseInt(params.page) * parseInt(params.per_page) ||

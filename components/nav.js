@@ -2,9 +2,7 @@ export default {
 	props: ['darkMode'],
 	data() {
 		return {
-			form: {
-				searchInput: '',
-			},
+			searchInput: '',
 		};
 	},
 	template: `
@@ -13,16 +11,17 @@ export default {
 			<a href="index.html">
 				<i class="fa-solid fa-house" :class="{ 'text-light': darkMode, 'text-dark': !darkMode }"></i>
 			</a>
-			<form class="d-flex" @submit.prevent="submit">
-				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" :style="{backgroundColor: darkMode ? 'var(--dark-background-color)' : '#fff', border: darkMode ? '1px solid #aaa' : '1px solid #ccc' }" v-model="form.searchInput" id="searchInput">
+			<form class="d-flex" @submit.prevent="search">
+				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" :style="{backgroundColor: darkMode ? 'var(--dark-background-color)' : '#fff', border: darkMode ? '1px solid #aaa' : '1px solid #ccc' }" v-model="searchInput" id="searchInput">
 				<button class="btn btn-outline-success" type="submit">Search</button>
 			</form>
 			</div>
 		</nav>
     `,
 	methods: {
-		async submit() {
-			this.$emit('submit', this.form);
+		search() {
+			this.$emit('search', this.searchInput, 'search');
+			this.searchInput = '';
 		},
 	},
 };
